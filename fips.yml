@@ -1,0 +1,9 @@
+#
+# fips-googletest
+#
+---
+exports:
+  header-dirs : [ 'googletest/googletest/include', 'googletest/googletest/include/gtest'  ]
+  modules:
+    googltest:   .
+
