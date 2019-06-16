@@ -1,14 +1,17 @@
 #
 # project: fips-googletest
 #
-cmake_minimum_required(VERSION 2.8)
-
-# include the fips main cmake file
-get_filename_component(FIPS_ROOT_DIR "../fips" ABSOLUTE)
-include("${FIPS_ROOT_DIR}/cmake/fips.cmake")
 
 
-fips_setup(PROJECT fips-googletest)
+if (NOT FIPS_IMPORT)
+    cmake_minimum_required(VERSION 2.8)
+    # include the fips main cmake file
+    get_filename_component(FIPS_ROOT_DIR "../fips" ABSOLUTE)
+    include("${FIPS_ROOT_DIR}/cmake/fips.cmake")
+
+    fips_setup(PROJECT fips-googletest)
+endif()
+
 
 fips_begin_lib(googletest)
 fips_include_directories(googletest/googletest)
@@ -26,7 +29,10 @@ fips_files(
 fips_end_lib()
 
 if (NOT FIPS_EXCEPTIONS)
+    add_definitions(-DGTEST_HAS_EXCEPTIONS=0)
     set(GOOGLETEST_NO_EXCEPTIONS "-fno-exceptions")
+else()
+    add_definitions(-DGTEST_HAS_EXCEPTIONS=1)
 endif()
 
 if (NOT FIPS_RTTI)
@@ -50,4 +56,7 @@ elseif(FIPS_MSVC)
     endif()
 endif()
 
-fips_finish()
+
+if (NOT FIPS_IMPORT)
+    fips_finish()
+endif()
